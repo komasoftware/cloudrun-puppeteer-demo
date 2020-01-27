@@ -1,0 +1,29 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: build_container
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/scraper-demo', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  id: push_container
+  args: ['push', 'gcr.io/$PROJECT_ID/scraper-demo']
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: deploy_to_cloudrun
+  args: [
+  'beta',
+  'run',
+  'deploy', 
+  'scraper-demo-europe-west1',
+  '--image',
+  'gcr.io/$PROJECT_ID/scraper-demo',
+  '--region',
+  'europe-west1',
+  '--platform',
+  'managed',
+  '--allow-unauthenticated',
+  '--memory',
+  '2048M',
+  '--concurrency',
+  '25',
+  '--update-env-vars',
+  'NODE_ENV=production,TOPIC_SCRAPE_RESULTS=projects/$PROJECT_ID/topics/scrape-demo,PROJECT=$PROJECT_ID'
+  ]
+images: ['gcr.io/$PROJECT_ID/scraper-demo']
