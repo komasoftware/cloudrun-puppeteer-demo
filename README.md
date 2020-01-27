@@ -11,6 +11,6 @@ Download Cloud SDK
 
 Login with gcloud and set your project
 
-Execute ``gcloud build submit .``
+Execute ``gcloud builds submit .``
 
 
